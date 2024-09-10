@@ -21,28 +21,28 @@ class PostController {
 
   // Criar post
   async createPost(req: Request, res: Response) {
-    const { title, content, ...rest } = req.body;
+    try {
+    const postData = req.body;
 
-    if (!title) {
+    if (!postData.title) {
       return res.status(400).json({
         status: 400,
         message: "O campo 'título' é obrigatório.",
       });
     }
 
-    if (!content) {
+    if (!postData.content) {
       return res.status(400).json({
         status: 400,
         message: "O post deve ter um conteúdo.",
       });
     }
-
-    try {
+    
       const newPost = await prisma.post.create({
-        data: { title, content, ...rest },
+        data: postData,
       });
 
-      return res.status(201).json({
+        res.status(201).json({
         status: 201,
         message: "Post criado com sucesso.",
         post: newPost,
